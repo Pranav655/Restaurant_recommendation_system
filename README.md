@@ -1,91 +1,231 @@
 # 🍴 Restaurant Recommendation & Review Prediction System
 
-A machine learning and Natural Language Processing (NLP) based restaurant application that provides personalized restaurant recommendations and predicts the sentiment of customer reviews.
+## 📌 Project Overview
 
-The project combines a **content-based recommendation system** with a **supervised machine learning based review prediction system**, and provides an interactive user interface using **Streamlit**.
+This project is a **Restaurant Recommendation and Review Prediction System** designed to help users find suitable restaurants based on their preferences and predict restaurant review/rating outcomes.
 
----
+The project has two main components:
 
-# 📌 Table of Contents
+1. **Restaurant Recommendation System**
+2. **Restaurant Review Prediction System**
 
-1. [Project Overview](#-project-overview)
-2. [Problem Statement](#-problem-statement)
-3. [Project Objectives](#-project-objectives)
-4. [Key Features](#-key-features)
-5. [System Architecture](#-system-architecture)
-6. [Dataset](#-dataset)
-7. [Data Loading](#-data-loading)
-8. [Data Cleaning](#-data-cleaning)
-9. [Exploratory Data Analysis](#-exploratory-data-analysis)
-10. [Feature Engineering](#-feature-engineering)
-11. [Restaurant Recommendation System](#-restaurant-recommendation-system)
-12. [TF-IDF Vectorization](#-tf-idf-vectorization)
-13. [Cosine Similarity](#-cosine-similarity)
-14. [User Preference Matching](#-user-preference-matching)
-15. [Rating Score](#-rating-score)
-16. [Popularity Score](#-popularity-score)
-17. [Final Recommendation Score](#-final-recommendation-score)
-18. [Review Prediction System](#-review-prediction-system)
-19. [Review Preprocessing](#-review-preprocessing)
-20. [Review Model Training](#-review-model-training)
-21. [Train/Test Split](#-traintest-split)
-22. [Model Evaluation](#-model-evaluation)
-23. [Streamlit Application](#-streamlit-application)
-24. [Project Structure](#-project-structure)
-25. [Saved Model Files](#-saved-model-files)
-26. [Technologies Used](#-technologies-used)
-27. [Installation](#-installation)
-28. [Running the Application](#-running-the-application)
-29. [Complete Workflow](#-complete-workflow)
-30. [Example](#-example)
-31. [Advantages](#-advantages)
-32. [Limitations](#-limitations)
-33. [Future Improvements](#-future-improvements)
-34. [Conclusion](#-conclusion)
-35. [Author](#-author)
+The system uses **Python, Pandas, Scikit-learn, NLP techniques, Machine Learning, and Streamlit**.
 
 ---
 
-# 📌 Project Overview
-
-The **Restaurant Recommendation & Review Prediction System** is designed to help users discover restaurants based on their preferences while also providing analysis of customer reviews.
-
-The system consists of two major components:
-
-### 1. Restaurant Recommendation
-
-The recommendation component suggests restaurants based on:
-
-- Location
-- Cuisine
-- Maximum budget
-- Minimum rating
-- Restaurant characteristics
-- Content similarity
-- Restaurant rating
-- Restaurant popularity
-
-The recommendation engine uses:
+# 🏗️ System Architecture
 
 ```text
-Restaurant Information
-        ↓
-Feature Engineering
-        ↓
-Combined Text Features
-        ↓
-TF-IDF
-        ↓
-Numerical Restaurant Vectors
-        ↓
-Cosine Similarity
-        ↓
-Similarity Score
-        ↓
-Rating Score
-        ↓
-Popularity Score
-        ↓
-Final Recommendation Score
-        ↓
-Top N Restaurants
+                    ┌─────────────────────┐
+                    │   Restaurant Dataset │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Data Cleaning &     │
+                    │ Preprocessing       │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Feature Engineering │
+                    └──────────┬──────────┘
+                               │
+                 ┌─────────────┴─────────────┐
+                 │                           │
+                 ▼                           ▼
+      ┌─────────────────────┐     ┌─────────────────────┐
+      │ Recommendation      │     │ Review Prediction   │
+      │ Pipeline            │     │ Pipeline            │
+      └──────────┬──────────┘     └──────────┬──────────┘
+                 │                           │
+                 ▼                           ▼
+      ┌─────────────────────┐     ┌─────────────────────┐
+      │ TF-IDF Vectorization │     │ Train/Test Split    │
+      └──────────┬──────────┘     └──────────┬──────────┘
+                 │                           │
+                 ▼                           ▼
+      ┌─────────────────────┐     ┌─────────────────────┐
+      │ Cosine Similarity   │     │ ML Model Training   │
+      └──────────┬──────────┘     └──────────┬──────────┘
+                 │                           │
+                 ▼                           ▼
+      ┌─────────────────────┐     ┌─────────────────────┐
+      │ Rating + Popularity │     │ Model Evaluation    │
+      │ Score               │     └──────────┬──────────┘
+      └──────────┬──────────┘                │
+                 │                           ▼
+                 ▼                 ┌─────────────────────┐
+      ┌─────────────────────┐      │ Review Prediction  │
+      │ Final Ranking       │      └─────────────────────┘
+      └──────────┬──────────┘
+                 │
+                 ▼
+      ┌─────────────────────┐
+      │ Top N Restaurants   │
+      └──────────┬──────────┘
+                 │
+                 └──────────────┐
+                                ▼
+                    ┌─────────────────────┐
+                    │   Streamlit UI      │
+                    │                     │
+                    │ User Preferences    │
+                    │        ↓            │
+                    │ Recommendations     │
+                    │        ↓            │
+                    │ Predictions         │
+                    └─────────────────────┘
+```
+
+---
+
+# 🎯 Project Scope
+
+The main goal is to provide **relevant restaurant recommendations** instead of simply listing restaurants based only on their rating.
+
+Users can specify:
+
+* 📍 Location
+* 🍛 Cuisine
+* 💰 Maximum budget
+* ⭐ Minimum rating
+* 🔢 Number of recommendations
+
+The system filters the available restaurants and ranks the suitable restaurants using multiple factors.
+
+---
+
+# 🔄 How the Recommendation System Works
+
+**Restaurant Dataset → Data Cleaning → Feature Engineering → TF-IDF → Cosine Similarity → User Filtering → Ranking → Top Recommendations → Streamlit**
+
+### 1. Data Collection
+
+The dataset contains restaurant information such as:
+
+* Restaurant name
+* Location
+* Cuisine
+* Restaurant type
+* Rating
+* Votes/reviews
+* Cost for two
+
+### 2. Data Cleaning
+
+Pandas is used to handle missing values, duplicates, incorrect data types, and inconsistent values.
+
+### 3. Feature Engineering
+
+Important textual attributes such as **location, cuisine, and restaurant type** are combined to represent the characteristics of each restaurant.
+
+### 4. TF-IDF Vectorization
+
+TF-IDF converts the textual restaurant information into **numerical vectors**, allowing restaurants to be mathematically compared.
+
+### 5. Cosine Similarity
+
+Cosine similarity measures the similarity between restaurant vectors.
+
+A higher similarity score means the restaurants have more similar characteristics.
+
+### 6. User Preference Filtering
+
+The user's requirements are applied to filter restaurants based on:
+
+**Location → Cuisine → Budget → Minimum Rating**
+
+### 7. Final Ranking
+
+Suitable restaurants are ranked using:
+
+* **Cosine similarity** — similarity between restaurant characteristics
+* **Rating score** — restaurant quality
+* **Popularity score** — number of votes/reviews
+
+These factors are combined into a **final recommendation score**.
+
+### 8. Top Recommendations
+
+The restaurants are sorted according to the final score and the requested number of restaurants is displayed.
+
+---
+
+# 🤖 Review Prediction
+
+The review prediction component uses a traditional **supervised machine-learning workflow**:
+
+**Review Data → Cleaning → Preprocessing → Feature Engineering → Train/Test Split → Model Training → Evaluation → Prediction**
+
+Historical review/rating data is used to train a machine-learning model.
+
+The dataset is divided into training and testing data. The model learns patterns from the training data and is then evaluated using unseen testing data.
+
+---
+
+# 🖥️ Streamlit Application
+
+Streamlit provides the user interface.
+
+The application follows:
+
+**User Input → Restaurant Filtering → Recommendation Scoring → Ranking → Top Results → UI Display**
+
+The UI displays:
+
+* Restaurant name
+* Rating
+* Location
+* Cuisine
+* Cost for two
+* Recommendation score
+
+---
+
+# 🧠 Techniques Used
+
+### Recommendation
+
+* Pandas
+* Feature Engineering
+* TF-IDF Vectorization
+* Cosine Similarity
+* Weighted Ranking
+* Content-Based Recommendation
+
+### Review Prediction
+
+* Data preprocessing
+* Feature engineering
+* Train/Test Split
+* Supervised Machine Learning
+* Model Evaluation
+
+---
+
+# 🚀 Future Scope
+
+The project can be extended with:
+
+* Personalized recommendations based on user history
+* Collaborative filtering
+* Hybrid recommendation algorithms
+* Review sentiment analysis
+* Restaurant distance calculation
+* Maps and restaurant locations
+* Real-time restaurant information
+* User ratings and feedback
+* Personalized user profiles
+
+---
+
+# 📌 Project Summary
+
+The project combines **data preprocessing, NLP, content-based recommendation, machine learning, and web deployment** to create a practical restaurant recommendation system.
+
+The recommendation component identifies restaurants matching the user's requirements and ranks them using **similarity, rating, and popularity**.
+
+The review prediction component uses historical data and **supervised machine learning** to make predictions.
+
+Finally, **Streamlit provides a user-friendly interface** through which users can interact with the recommendation and prediction system.
