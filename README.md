@@ -229,3 +229,5 @@ The recommendation component identifies restaurants matching the user's requirem
 The review prediction component uses historical data and **supervised machine learning** to make predictions.
 
 Finally, **Streamlit provides a user-friendly interface** through which users can interact with the recommendation and prediction system.
+
+.
